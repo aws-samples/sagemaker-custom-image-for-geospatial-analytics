@@ -95,6 +95,93 @@ After you created a new space or selected an existing space, you will be present
 
 This will open a JupyterLab app in a new browser tab.
 
+## Examples: Run Interactive Geospatial Data Analyses and Large-Scale Processing Jobs in SageMaker
+
+Once the Custom Geospatial Image has been built and attached to your SageMaker Domain, you can use it in one of two main ways:
+
+1. First, you can use the image as the base to run a JupyterLab Notebook kernel to perform __in-Notebook interactive development__. 
+2. Second, you can use the image in a SageMaker Processing Job to run __highly-parallelized geospatial processing pipelines__. 
+
+We will briefly explain both options below. Also refer to the example notebook in the `notebooks` folder of this repository for tutorials on both approaches.
+
+### In-Notebook interactive development using custom image
+
+> See `/notebooks/01-interactive-geospatial-analyses-custom-image.ipynb` for a walk-though example.
+
+Using the Custom Geospatial Image in a Jupyter app gives you access to many common geospatial libraies. For example, you can readily specify and plot a polygon inside the Jupyter Notebook using the code below without the need to install any of the specialist libraries used.
+
+```python
+import shapely
+import leafmap
+import geopandas
+
+coords = [[-102.00723310488662,40.596123257503024],[-102.00723310488662,40.58168585757733],[-101.9882214495914,40.58168585757733],[-101.9882214495914,40.596123257503024],[-102.00723310488662,40.596123257503024]]
+polgyon = shapely.Polygon(coords)
+gdf = geopandas.GeoDataFrame(index=[0], crs='epsg:4326', geometry=[polgyon])
+
+Map = leafmap.Map(center=[40.596123257503024, -102.00723310488662], zoom=13)
+Map.add_basemap("USGS NAIP Imagery")
+Map.add_gdf(gdf, layer_name="test", style={"color": "yellow", "fillOpacity": 0.3, "clickable": True,})
+Map
+```
+
+Below is another example that plots Band-2 of a Sentinel-2 scene clipped to the above-specified Polygon (`coords`) inside a notebook environment.
+
+![Geospatial notebook](images/geospatial_notebook.png)
+
+### Highly Parallelized Geospatial Processing Pipelines using SageMaker Processing Job
+
+> See `/notebooks/02-geospatial-processing-custom-image.ipynb` for a walk-though example.
+
+You can specify the custom image as the image to run a [SageMaker Processing Job](https://docs.aws.amazon.com/sagemaker/latest/dg/processing-job.html). This enables you to leverage specialist geospatial processing frameworks to run large-scale distributed data processing pipelines with just a few lines of code. The below code snippet initializes and then runs a SageMaker `ScriptProcessor` object that leverages the Custom Geospatial Image (`geospatial_image_uri`) to run a geospatial processing routine (specified in the `scripts/generate_aoi_data_cube.py`) on 20 `ml.m5.2xlarge` instances.
+
+```python
+import sagemaker
+from sagemaker import get_execution_role
+from sagemaker.sklearn.processing import ScriptProcessor
+from sagemaker.processing import ProcessingInput, ProcessingOutput
+
+region = sagemaker.Session().boto_region_name
+role = get_execution_role()
+
+geospatial_image_uri = "<GEOSPATIAL-IMAGE-URI>" #<-- set to uri of the custom geospatial image
+
+processor_geospatial_data_cube = ScriptProcessor(
+    command=['python3'],
+    image_uri=geospatial_image_uri,
+    role=role,
+    instance_count=20,
+    instance_type='ml.m5.2xlarge',
+    base_job_name='aoi-data-cube'
+)
+
+processor_geospatial_data_cube.run(
+    code='scripts/generate_aoi_data_cube.py', #<-- processing script
+    inputs=[
+        ProcessingInput(
+            source=f"s3://{bucket_name}/{bucket_prefix_aoi_meta}/",
+            destination='/opt/ml/processing/input/aoi_meta/', #<-- meta data (incl. geography) of the area of observation
+            s3_data_distribution_type="FullyReplicated" #<-- sharding strategy for distribution across nodes
+        ),        
+        ProcessingInput(
+            source=f"s3://{bucket_name}/{bucket_prefix_sentinel2_meta}/",
+            destination='/opt/ml/processing/input/sentinel2_meta/', #<-- Sentinel-2 scene metadata (1 file per scene)
+            s3_data_distribution_type="ShardedByS3Key" #<-- sharding strategy for distribution across nodes
+        ),
+    ],
+    outputs=[
+        ProcessingOutput(
+            source='/opt/ml/processing/output/',
+            destination=f"s3://{bucket_name}/processing/geospatial-data-cube/{execution_id}/output/" #<-- output S3 path
+        )
+    ]
+)
+```
+
+Running a typical processing routine involving raster file loading, clipping to an AOI, resampling specific bands and masking clouds among other steps (see `/notebooks/02-geospatial-processing-custom-image.ipynb`) across 134 110x110km Sentinel-2 scenes completes in under 15 minutes as can be seen in the below CloudWatch dashboard. 
+
+![Processing Job](images/processing_job_cw.png)
+
 ## Security
 
 See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
