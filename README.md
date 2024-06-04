@@ -29,10 +29,12 @@ The initial infrastructure can be deployed via the CDK stack in this repository.
 1. Clone this repository
 2. Navigate to the cloned repository (`cd <path to repository>`)
 3. Configure [CLI credentials for your AWS account](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)
-4. If you have not done so already, [boostrap your environment for CDK deployment](https://docs.aws.amazon.com/cdk/v2/guide/bootstrapping.html#bootstrapping-env) by running `cdk bootstrap aws://ACCOUNT-NUMBER-1/REGION-1`
-5. Run the CDK deployment by running `cd deployment && cdk deploy`
-6. Wait until the `CustomImageBuildPipelineStack` been marked as `CREATE COMPLETE`
-7. Copy the Output value for `CustomImageBuildPipelineStack.CodeBuildProjectUrl`
+4. In the cloned repository, navigate to the deployment folder: `cd deployment`
+5. Run `npm i` to install project dependencies
+6. If you have not done so already, [bootstrap your environment for CDK deployment](https://docs.aws.amazon.com/cdk/v2/guide/bootstrapping.html#bootstrapping-env) by running `cdk bootstrap aws://ACCOUNT-NUMBER-1/REGION-1`
+7. Run the CDK deployment by running `cd deployment && cdk deploy`
+8. Wait until the `CustomImageBuildPipelineStack` been marked as `CREATE COMPLETE`
+9. Copy the Output value for `CustomImageBuildPipelineStack.CodeBuildProjectUrl`
 
 ### Run Build Pipeline
 
