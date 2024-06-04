@@ -1,6 +1,6 @@
 ARG DISTRIBUTION_TYPE
 
-FROM public.ecr.aws/sagemaker/sagemaker-distribution:1.5.2-$DISTRIBUTION_TYPE
+FROM public.ecr.aws/sagemaker/sagemaker-distribution:1.8.0-$DISTRIBUTION_TYPE
 
 ARG NB_USER="sagemaker-user"
 ARG NB_UID=1000
