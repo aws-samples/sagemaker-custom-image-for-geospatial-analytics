@@ -67,6 +67,34 @@ After the image has been pushed to the ECR repository, you need to attach it to 
 8. Select **JupyterLab image** as application type and click on **Submit**
 ![Attach Image](images/attach_image_02.png)
 
+### Use the Custom Geospatial Image in the JupyterLab app
+
+#### Open SageMaker Studio
+
+1. Open the [SageMaker console](https://console.aws.amazon.com/sagemaker)
+2. Click on **Studio** in the left navigation pane
+3. *Only applies if you have multiple SageMaker Studio domains:* Select the **Domain** you attached the custom image to
+4. Select a **User Profile** and click on **Open Studio**
+5. SageMaker Studio UI will launch in a new browser tab
+
+#### (Optional) Create a new JupyterLab space
+
+If you don't have any space created, follow the steps below to setup a new space. Otherwise you can also select one of your existing spaces.
+
+1. Select **JupyterLab**
+2. Click on **Create JupyterLab space** and enter a name for your new space
+![Create Space](images/studio_new_space.png)
+
+#### Start a JupyterLab with the custom image
+
+After you created a new space or selected an existing space, you will be presented with the space details.
+
+1. Select the custom image which you attached to SageMaker Studio as **Image**
+![Run Space](images/studio_run_space.png)
+2. Click on **Run Space**
+
+This will open a JupyterLab app in a new browser tab.
+
 ## Security
 
 See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
