@@ -4,4 +4,6 @@ import * as cdk from 'aws-cdk-lib';
 import { CustomImageBuildPipelineStack } from '../lib/custom-image-build-pipeline';
 
 const app = new cdk.App();
-new CustomImageBuildPipelineStack(app, 'CustomImageBuildPipelineStack', {});
+new CustomImageBuildPipelineStack(app, 'CustomImageBuildPipelineStack', {
+    description: 'Custom Geospatial Image Sagemaker (uksb-ug9sgjllu7)',
+});
