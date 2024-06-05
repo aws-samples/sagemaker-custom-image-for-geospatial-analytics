@@ -108,7 +108,7 @@ We will briefly explain both options below. Also refer to the example notebook i
 
 ### In-Notebook interactive development using custom image
 
-> See [`notebooks/01-interactive-geospatial-analyses-custom-image.ipynb`](notebooks/01-interactive-geospatial-analyses-custom-image.ipynb`) for a walk-though example.
+> See [`notebooks/01-interactive-geospatial-analyses-custom-image.ipynb`](notebooks/01-interactive-geospatial-analyses-custom-image.ipynb) for a walk-though example.
 
 Using the Custom Geospatial Image in a Jupyter app gives you access to many common geospatial libraies. For example, you can readily specify and plot a polygon inside the Jupyter Notebook using the code below without the need to install any of the specialist libraries used.
 
