@@ -32,7 +32,7 @@ The initial infrastructure can be deployed via the CDK stack in this repository.
 4. In the cloned repository, navigate to the deployment folder: `cd deployment`
 5. Run `npm i` to install project dependencies
 6. If you have not done so already, [bootstrap your environment for CDK deployment](https://docs.aws.amazon.com/cdk/v2/guide/bootstrapping.html#bootstrapping-env) by running `cdk bootstrap aws://ACCOUNT-NUMBER-1/REGION-1`
-7. Run the CDK deployment by running `cd deployment && cdk deploy`
+7. Run the CDK deployment by running `cdk deploy`
 8. Wait until the `CustomImageBuildPipelineStack` been marked as `CREATE COMPLETE`
 9. Copy the Output value for `CustomImageBuildPipelineStack.CodeBuildProjectUrl`
 
@@ -108,7 +108,7 @@ We will briefly explain both options below. Also refer to the example notebook i
 
 ### In-Notebook interactive development using custom image
 
-> See `/notebooks/01-interactive-geospatial-analyses-custom-image.ipynb` for a walk-though example.
+> See [`notebooks/01-interactive-geospatial-analyses-custom-image.ipynb`](notebooks/01-interactive-geospatial-analyses-custom-image.ipynb`) for a walk-though example.
 
 Using the Custom Geospatial Image in a Jupyter app gives you access to many common geospatial libraies. For example, you can readily specify and plot a polygon inside the Jupyter Notebook using the code below without the need to install any of the specialist libraries used.
 
@@ -133,7 +133,7 @@ Below is another example that plots Band-2 of a Sentinel-2 scene clipped to the 
 
 ### Highly Parallelized Geospatial Processing Pipelines using SageMaker Processing Job
 
-> See `/notebooks/02-geospatial-processing-custom-image.ipynb` for a walk-though example.
+> See [`notebooks/02-geospatial-processing-custom-image.ipynb`](notebooks/02-geospatial-processing-custom-image.ipynb) for a walk-though example.
 
 You can specify the custom image as the image to run a [SageMaker Processing Job](https://docs.aws.amazon.com/sagemaker/latest/dg/processing-job.html). This enables you to leverage specialist geospatial processing frameworks to run large-scale distributed data processing pipelines with just a few lines of code. The below code snippet initializes and then runs a SageMaker `ScriptProcessor` object that leverages the Custom Geospatial Image (`geospatial_image_uri`) to run a geospatial processing routine (specified in the `scripts/generate_aoi_data_cube.py`) on 20 `ml.m5.2xlarge` instances.
 
@@ -180,7 +180,7 @@ processor_geospatial_data_cube.run(
 )
 ```
 
-Running a typical processing routine involving raster file loading, clipping to an AOI, resampling specific bands and masking clouds among other steps (see `/notebooks/02-geospatial-processing-custom-image.ipynb`) across 134 110x110km Sentinel-2 scenes completes in under 15 minutes as can be seen in the below CloudWatch dashboard. 
+Running a typical processing routine involving raster file loading, clipping to an AOI, resampling specific bands and masking clouds among other steps (see `notebooks/02-geospatial-processing-custom-image.ipynb`) across 134 110x110km Sentinel-2 scenes completes in under 15 minutes as can be seen in the below CloudWatch dashboard. 
 
 ![Processing Job](images/processing_job_cw.png)
 
